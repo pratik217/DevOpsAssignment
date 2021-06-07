@@ -1,0 +1,8 @@
+Self-Signed Certificates
+
+openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:4096 -keyout private.key -out cert_assign.crt
+
+
+Once the certificate has been generated, we should verify that it is correct according to the parameters that we have set.
+
+openssl x509 -in cert_assign.crt -text -noout
