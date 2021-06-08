@@ -1,0 +1,59 @@
+ansible-galaxy init assignment
+
+cat tasks/main.yml
+
+---
+- hosts: all
+  tasks:
+    - name: ensure nginx is at the latest version
+      apt: 
+		  name=nginx 
+		  state=latest
+		  
+	- name: ensure nginx is at the latest version
+      apt: 
+		  name=logrotate 
+		  state=latest
+	- name: ensure nginx is at the latest version
+      apt: 
+		pkg:
+		  - docker-ce
+		  - docker-ce-cli
+		  - containerd.ios 
+		state: latest
+		update_cache: true
+		  
+    - name: start nginx
+      service:
+          name: nginx
+          state: started
+	 - name: copy the nginx config file and restart nginx
+		  copy:
+			src: /home/app/static_site.cfg
+			dest: /etc/nginx/sites-available/static_site.cfg
+		  become: yes
+	- name: copy the lorotate config file
+		  copy:
+			src: templates/assignment.j2
+			dest: /etc/logrotate.conf
+		  become: yes
+	- name: Run logrotate
+		command: logrotate -d /etc/logrotate.conf
+        
+        
+cat templates/assignment.j2
+
+
+"/var/log/httpd/access.log" /var/log/httpd/error.log {
+        size {{th_size}}
+        rotate 4
+}
+
+
+cat defaults/main.yml
+
+# defaults file for motd
+th_size: 100m
+
+
+
